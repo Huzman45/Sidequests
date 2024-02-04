@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sidequests/backend/generate.dart';
 import 'package:sidequests/backend/table.dart';
 import 'package:sidequests/backend/tasks.dart';
 import 'package:sidequests/main.dart';
@@ -10,6 +11,7 @@ import 'package:uuid/uuid.dart';
 class HomeController extends GetxController {
   final model = HomeModel();
 
+  final PageController pageController = PageController(initialPage: 1);
   final TextEditingController taskDescriptionController =
       TextEditingController();
 
@@ -17,6 +19,10 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     model.loadData();
+  }
+
+  void updatePageIndex(int index) {
+    model.pageIndex = index;
   }
 
   void addTask() {
@@ -57,6 +63,13 @@ class HomeController extends GetxController {
     model.pendingTasks.remove(task);
 
     model.coins.value += model.getCoins(task.difficulty);
+    model.storylines.add(
+      await storylineGen(
+          task.description,
+          model.storylines.isEmpty
+              ? "I, the adventurer, wake up in my bed"
+              : model.storylines.last),
+    );
   }
 
   void uncheckTask(TaskRecord task) async {
@@ -68,6 +81,7 @@ class HomeController extends GetxController {
     model.pendingTasks.add(task);
 
     model.coins.value -= model.getCoins(task.difficulty);
+    //model.storylines.remove("temp");
   }
 
   void deleteTask(TaskRecord task) async {

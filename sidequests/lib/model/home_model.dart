@@ -10,9 +10,11 @@ class HomeModel {
 
   final RxList<TaskRecord> pendingTasks = <TaskRecord>[].obs;
   final RxList<TaskRecord> completedTasks = <TaskRecord>[].obs;
+  final RxList<String> storylines = <String>[].obs;
+
+  int pageIndex = 1;
 
   var taskDifficulty = TaskType.minorQuest.obs;
-
   var coins = 0.obs;
   var totalCoins = 0.obs;
 

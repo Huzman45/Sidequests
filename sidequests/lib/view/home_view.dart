@@ -11,106 +11,146 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final model = controller.model;
 
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: controller.addTask,
-        child: const Icon(Icons.add),
-      ),
-      body: SafeArea(
-        child: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/background.jpg"), fit: BoxFit.cover),
-          ),
-          child: CustomScrollView(
-            slivers: [
-              Obx(
-                () => SliverToBoxAdapter(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Stack(
-                            alignment: const Alignment(0, 0.5),
-                            clipBehavior: Clip.none,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(40, 0, 20, 0),
-                                child: LinearProgressIndicator(
-                                  minHeight: 40,
-                                  value: model.coins.value /
-                                      (model.totalCoins.value == 0
-                                          ? 1
-                                          : model.totalCoins.value),
-                                ),
-                              ),
-                              Image.asset(
-                                "assets/progress_overlay.png",
-                                fit: BoxFit.fill,
-                                width: Get.width,
-                                height: 80,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 50,
-                                width: 40,
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage("assets/coin.png"),
-                                      fit: BoxFit.fill),
-                                ),
-                              ),
-                              Text(
-                                model.coins.value.toString(),
-                                style: textTheme(context).labelLarge!.copyWith(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      height: 1,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+    return PageView(
+      controller: controller.pageController,
+      onPageChanged: controller.updatePageIndex,
+      children: [
+        Scaffold(
+          body: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/background.jpg"),
+                  fit: BoxFit.cover),
+            ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/scroll.png"), fit: BoxFit.cover),
               ),
-              const TaskTiles(),
-              const SliverToBoxAdapter(child: SizedBox(height: 80)),
-              Obx(
-                () => SliverToBoxAdapter(
-                  child: Visibility(
-                    visible: model.completedTasks.isNotEmpty,
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
+              child: Obx(
+                () => ListView.builder(
+                  itemCount: model.storylines.length,
+                  itemBuilder: (context, index) => ListTile(
+                    title: Center(
                       child: Text(
-                        "Conquered Quests",
-                        style: textTheme(context).headlineLarge!.copyWith(
-                              color: ThemeConstants.vibrantYellow,
-                              shadows: [const Shadow(offset: Offset(2, 2))],
-                              fontWeight: FontWeight.bold,
+                        model.storylines[index],
+                        style: textTheme(context).bodyLarge!.copyWith(
+                              color: Colors.white,
                             ),
                       ),
                     ),
                   ),
                 ),
               ),
-              const TaskTiles(completed: true),
-            ],
+            ),
           ),
         ),
-      ),
+        Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: controller.addTask,
+            child: const Icon(Icons.add),
+          ),
+          body: SafeArea(
+            child: Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/background.jpg"),
+                    fit: BoxFit.cover),
+              ),
+              child: CustomScrollView(
+                slivers: [
+                  Obx(
+                    () => SliverToBoxAdapter(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        alignment: Alignment.center,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Stack(
+                                alignment: const Alignment(0, 0.5),
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(40, 0, 20, 0),
+                                    child: LinearProgressIndicator(
+                                      minHeight: 40,
+                                      value: model.coins.value /
+                                          (model.totalCoins.value == 0
+                                              ? 1
+                                              : model.totalCoins.value),
+                                    ),
+                                  ),
+                                  Image.asset(
+                                    "assets/progress_overlay.png",
+                                    fit: BoxFit.fill,
+                                    width: Get.width,
+                                    height: 80,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 40,
+                                    decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                          image: AssetImage("assets/coin.png"),
+                                          fit: BoxFit.fill),
+                                    ),
+                                  ),
+                                  Text(
+                                    model.coins.value.toString(),
+                                    style:
+                                        textTheme(context).labelLarge!.copyWith(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              height: 1,
+                                            ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const TaskTiles(),
+                  const SliverToBoxAdapter(child: SizedBox(height: 80)),
+                  Obx(
+                    () => SliverToBoxAdapter(
+                      child: Visibility(
+                        visible: model.completedTasks.isNotEmpty,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text(
+                            "Conquered Quests",
+                            style: textTheme(context).headlineLarge!.copyWith(
+                                  color: ThemeConstants.vibrantYellow,
+                                  shadows: [const Shadow(offset: Offset(2, 2))],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const TaskTiles(completed: true),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
