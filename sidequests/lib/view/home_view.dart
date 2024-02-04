@@ -27,7 +27,11 @@ class HomeView extends GetView<HomeController> {
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
-        child: Center(
+        child: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/background.png"), fit: BoxFit.cover),
+          ),
           child: CustomScrollView(
             slivers: [
               TaskTile(taskList: model.pendingTasks),
