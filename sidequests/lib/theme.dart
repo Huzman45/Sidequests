@@ -7,6 +7,7 @@ ColorScheme colourScheme(BuildContext context) => Theme.of(context).colorScheme;
 class ThemeConstants {
   static Color get earthBrown => const Color.fromARGB(255, 159, 101, 47);
   static Color get neonGreen => const Color(0xFF01be02);
+  static Color get vibrantYellow => const Color(0xFFffd224);
 }
 
 ThemeData get lightMode => ThemeData(

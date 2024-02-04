@@ -86,7 +86,25 @@ class HomeView extends GetView<HomeController> {
                 ),
               ),
               const TaskTiles(),
-              const SliverToBoxAdapter(child: SizedBox(height: 100)),
+              const SliverToBoxAdapter(child: SizedBox(height: 80)),
+              Obx(
+                () => SliverToBoxAdapter(
+                  child: Visibility(
+                    visible: model.completedTasks.isNotEmpty,
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(
+                        "Conquered Quests",
+                        style: textTheme(context).headlineLarge!.copyWith(
+                              color: ThemeConstants.vibrantYellow,
+                              shadows: [const Shadow(offset: Offset(2, 2))],
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               const TaskTiles(completed: true),
             ],
           ),

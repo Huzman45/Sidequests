@@ -16,7 +16,7 @@ class TaskInputDialog extends GetView<HomeController> {
             onPressed: Get.back,
           ),
           title: Text(
-            "Add Task",
+            "Add Quest",
             style:
                 textTheme(context).headlineLarge!.copyWith(color: Colors.white),
           ),
@@ -24,6 +24,7 @@ class TaskInputDialog extends GetView<HomeController> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: controller.confirmAddTask,
+          backgroundColor: ThemeConstants.neonGreen,
           child: const Icon(Icons.check),
         ),
         body: Padding(
