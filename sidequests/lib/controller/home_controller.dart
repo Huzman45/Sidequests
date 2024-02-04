@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sidequests/backend/tables/table.dart';
-import 'package:sidequests/backend/tables/tasks.dart';
+import 'package:sidequests/backend/table.dart';
+import 'package:sidequests/backend/tasks.dart';
 import 'package:sidequests/main.dart';
 import 'package:sidequests/model/home_model.dart';
 import 'package:sidequests/view/task_input_dialog.dart';
@@ -21,12 +21,14 @@ class HomeController extends GetxController {
 
   void addTask() {
     taskDescriptionController.clear();
+    model.taskDifficulty.value = TaskType.minorQuest;
     Get.dialog(const TaskInputDialog());
   }
 
-  TaskRecord _initTask(String descripion) {
+  TaskRecord _initTask() {
     final task = TaskRecord({});
-    task.description = descripion;
+    task.description = taskDescriptionController.text;
+    task.difficulty = model.taskDifficulty.value;
 
     DateTime now = DateTime.now();
     task.date = DateTime(now.year, now.month, now.day);
@@ -38,8 +40,10 @@ class HomeController extends GetxController {
   }
 
   void confirmAddTask() async {
-    final task = _initTask(taskDescriptionController.text);
+    final task = _initTask();
     model.pendingTasks.add(task);
+    model.totalCoins.value += (model.getCoins(task.difficulty));
+
     await db.insert(Tables.taskTable, task.data);
     Get.back();
   }
@@ -51,6 +55,8 @@ class HomeController extends GetxController {
 
     model.completedTasks.add(task);
     model.pendingTasks.remove(task);
+
+    model.coins.value += model.getCoins(task.difficulty);
   }
 
   void uncheckTask(TaskRecord task) async {
@@ -60,15 +66,24 @@ class HomeController extends GetxController {
 
     model.completedTasks.remove(task);
     model.pendingTasks.add(task);
+
+    model.coins.value -= model.getCoins(task.difficulty);
   }
 
   void deleteTask(TaskRecord task) async {
     await db.delete(Tables.taskTable, where: 'id = ?', whereArgs: [task.id]);
+    model.totalCoins.value -= (model.getCoins(task.difficulty));
 
     if (task.completed) {
       model.completedTasks.remove(task);
     } else {
       model.pendingTasks.remove(task);
+    }
+  }
+
+  void selectDifficulty(TaskType? type) {
+    if (type != null) {
+      model.taskDifficulty.value = type;
     }
   }
 }

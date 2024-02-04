@@ -1,4 +1,4 @@
-import 'package:sidequests/backend/tables/table.dart';
+import 'package:sidequests/backend/table.dart';
 
 class DayRecord extends Record {
   DayRecord(super.data);

@@ -1,4 +1,4 @@
-import 'package:sidequests/backend/tables/table.dart';
+import 'package:sidequests/backend/table.dart';
 
 class TaskRecord extends Record {
   TaskRecord(super.data);
@@ -14,4 +14,13 @@ class TaskRecord extends Record {
 
   bool get completed => getAttr('completed') == 1;
   set completed(bool completed) => setAttr('completed', completed);
+
+  TaskType get difficulty => getAttr<TaskType>('difficulty')!;
+  set difficulty(TaskType difficulty) => setAttr('difficulty', difficulty);
+}
+
+enum TaskType {
+  minorQuest,
+  sideQuest,
+  mainQuest,
 }

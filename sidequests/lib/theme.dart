@@ -8,6 +8,8 @@ class ThemeConstants {
   static Color get earthBrown => const Color.fromARGB(255, 159, 101, 47);
   static Color get neonGreen => const Color(0xFF01be02);
   static Color get vibrantYellow => const Color(0xFFffd224);
+  static Color get commonBlue => const Color(0xFF98ccfe);
+  static Color get rarePurple => const Color(0xFFa335ee);
 }
 
 ThemeData get lightMode => ThemeData(

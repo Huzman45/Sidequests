@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
-import 'package:sidequests/backend/tables/table.dart';
+import 'package:sidequests/backend/table.dart';
 import 'package:sidequests/controller/home_controller.dart';
 import 'package:sidequests/theme.dart';
 import 'package:sidequests/view/home_view.dart';
@@ -26,16 +26,22 @@ void initializeApp() async {
     await Directory(databasesPath).create();
   } catch (_) {}
 
-  db = await openDatabase(path, version: 1,
-      onCreate: (Database database, int version) async {
-    await database.execute('''
+  db = await openDatabase(
+    path,
+    version: 2,
+    onCreate: (Database database, int version) async {
+      await database.execute('''
 create table ${Tables.taskTable} ( 
   id text primary key, 
   date text not null,
   description text not null,
   completed int not null)
 ''');
-  });
+    },
+    onUpgrade: (db, oldVersion, newVersion) async =>
+        await db.execute('''alter table ${Tables.taskTable}
+    add difficulty text not null;'''),
+  );
 
   runApp(const MainApp());
 }

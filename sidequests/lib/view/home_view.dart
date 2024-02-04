@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sidequests/backend/tasks.dart';
 import 'package:sidequests/controller/home_controller.dart';
 import 'package:sidequests/theme.dart';
 
@@ -41,10 +42,10 @@ class HomeView extends GetView<HomeController> {
                                     const EdgeInsets.fromLTRB(40, 0, 20, 0),
                                 child: LinearProgressIndicator(
                                   minHeight: 40,
-                                  value: model.completedTasks.length /
-                                      (model.totalTasks == 0
+                                  value: model.coins.value /
+                                      (model.totalCoins.value == 0
                                           ? 1
-                                          : model.totalTasks),
+                                          : model.totalCoins.value),
                                 ),
                               ),
                               Image.asset(
@@ -70,7 +71,7 @@ class HomeView extends GetView<HomeController> {
                                 ),
                               ),
                               Text(
-                                model.completedTasks.length.toString(),
+                                model.coins.value.toString(),
                                 style: textTheme(context).labelLarge!.copyWith(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -131,55 +132,69 @@ class TaskTiles extends GetView<HomeController> {
     return Obx(
       () => SliverList.builder(
         itemCount: taskList.length,
-        itemBuilder: (context, index) => Dismissible(
-          key: Key(taskList[index].description),
-          onDismissed: (direction) => controller.deleteTask(taskList[index]),
-          child: Container(
-            margin: const EdgeInsets.all(5),
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/wood.png"),
-                fit: BoxFit.fill,
-              ),
-            ),
-            child: ListTile(
-              title: RichText(
-                text: TextSpan(
-                  text: taskList[index].description,
-                  style: textTheme(context).bodyLarge!.copyWith(
-                      color: Colors.white,
-                      decorationColor: const Color.fromARGB(255, 223, 223, 223),
-                      decorationThickness: 4,
-                      fontWeight: FontWeight.bold,
-                      decoration:
-                          completed ? TextDecoration.lineThrough : null),
+        itemBuilder: (context, index) {
+          final imagePath = switch (taskList[index].difficulty) {
+            TaskType.minorQuest => "assets/wood_blue.png",
+            TaskType.sideQuest => "assets/wood_yellow.png",
+            TaskType.mainQuest => "assets/wood_purple.png",
+          };
+
+          final decorationColour = switch (taskList[index].difficulty) {
+            TaskType.minorQuest => ThemeConstants.commonBlue,
+            TaskType.sideQuest => ThemeConstants.vibrantYellow,
+            TaskType.mainQuest => ThemeConstants.rarePurple,
+          };
+
+          return Dismissible(
+            key: Key(taskList[index].description),
+            onDismissed: (direction) => controller.deleteTask(taskList[index]),
+            child: Container(
+              margin: const EdgeInsets.all(5),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(imagePath),
+                  fit: BoxFit.fill,
                 ),
               ),
-              trailing: ElevatedButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: const Color(0x00000000),
-                    shadowColor: const Color(0x00000000),
-                    surfaceTintColor: const Color(0x00000000),
+              child: ListTile(
+                title: RichText(
+                  text: TextSpan(
+                    text: taskList[index].description,
+                    style: textTheme(context).bodyLarge!.copyWith(
+                        color: Colors.white,
+                        decorationColor: decorationColour,
+                        decorationThickness: 4,
+                        fontWeight: FontWeight.bold,
+                        decoration:
+                            completed ? TextDecoration.lineThrough : null),
                   ),
-                  onPressed: () => completed
-                      ? controller.uncheckTask(taskList[index])
-                      : controller.checkTask(taskList[index]),
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    foregroundDecoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: completed
-                            ? const AssetImage("assets/check_checked.png")
-                            : const AssetImage("assets/check_unchecked.png"),
-                      ),
+                ),
+                trailing: ElevatedButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: const Color(0x00000000),
+                      shadowColor: const Color(0x00000000),
+                      surfaceTintColor: const Color(0x00000000),
                     ),
-                  )),
+                    onPressed: () => completed
+                        ? controller.uncheckTask(taskList[index])
+                        : controller.checkTask(taskList[index]),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      foregroundDecoration: BoxDecoration(
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: completed
+                              ? const AssetImage("assets/check_checked.png")
+                              : const AssetImage("assets/check_unchecked.png"),
+                        ),
+                      ),
+                    )),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

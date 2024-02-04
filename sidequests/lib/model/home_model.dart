@@ -1,13 +1,20 @@
 import 'package:get/get.dart';
-import 'package:sidequests/backend/tables/table.dart';
-import 'package:sidequests/backend/tables/tasks.dart';
+import 'package:sidequests/backend/table.dart';
+import 'package:sidequests/backend/tasks.dart';
 import 'package:sidequests/main.dart';
 
 class HomeModel {
+  static int minorCoins = 2;
+  static int sideCoins = 5;
+  static int mainCoins = 10;
+
   final RxList<TaskRecord> pendingTasks = <TaskRecord>[].obs;
   final RxList<TaskRecord> completedTasks = <TaskRecord>[].obs;
 
-  int get totalTasks => pendingTasks.length + completedTasks.length;
+  var taskDifficulty = TaskType.minorQuest.obs;
+
+  var coins = 0.obs;
+  var totalCoins = 0.obs;
 
   Future<void> loadData() async {
     DateTime now = DateTime.now();
@@ -19,9 +26,23 @@ class HomeModel {
       final task = TaskRecord(Map.from(record));
       if (task.completed) {
         completedTasks.add(task);
+        coins.value += getCoins(task.difficulty);
       } else {
         pendingTasks.add(task);
       }
+
+      totalCoins.value += getCoins(task.difficulty);
+    }
+  }
+
+  int getCoins(TaskType type) {
+    switch (type) {
+      case TaskType.minorQuest:
+        return minorCoins;
+      case TaskType.sideQuest:
+        return sideCoins;
+      case TaskType.mainQuest:
+        return mainCoins;
     }
   }
 }
