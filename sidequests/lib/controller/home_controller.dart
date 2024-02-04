@@ -55,21 +55,18 @@ class HomeController extends GetxController {
   }
 
   void checkTask(TaskRecord task) async {
-    task.completed = true;
-    await db.update(Tables.taskTable, task.data,
-        where: "id = ?", whereArgs: [task.id]);
-
+    String prev = model.completedTasks.isEmpty
+        ? "I, the adventurer, wake up in my bed"
+        : model.completedTasks.last.story!;
     model.completedTasks.add(task);
     model.pendingTasks.remove(task);
-
     model.coins.value += model.getCoins(task.difficulty);
-    model.storylines.add(
-      await storylineGen(
-          task.description,
-          model.storylines.isEmpty
-              ? "I, the adventurer, wake up in my bed"
-              : model.storylines.last),
-    );
+
+    task.completed = true;
+    task.story = await storylineGen(task.description, prev);
+
+    await db.update(Tables.taskTable, task.data,
+        where: "id = ?", whereArgs: [task.id]);
   }
 
   void uncheckTask(TaskRecord task) async {
@@ -79,9 +76,7 @@ class HomeController extends GetxController {
 
     model.completedTasks.remove(task);
     model.pendingTasks.add(task);
-
     model.coins.value -= model.getCoins(task.difficulty);
-    //model.storylines.remove("temp");
   }
 
   void deleteTask(TaskRecord task) async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:sidequests/backend/tasks.dart';
 import 'package:sidequests/controller/home_controller.dart';
@@ -16,32 +17,48 @@ class HomeView extends GetView<HomeController> {
       onPageChanged: controller.updatePageIndex,
       children: [
         Scaffold(
-          body: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/background.jpg"),
-                  fit: BoxFit.cover),
-            ),
+          body: SafeArea(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              padding: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage("assets/scroll.png"), fit: BoxFit.cover),
+                    image: AssetImage("assets/background.jpg"),
+                    fit: BoxFit.cover),
               ),
-              child: Obx(
-                () => ListView.builder(
-                  itemCount: model.storylines.length,
-                  itemBuilder: (context, index) => ListTile(
-                    title: Center(
-                      child: Text(
-                        model.storylines[index],
-                        style: textTheme(context).bodyLarge!.copyWith(
-                              color: Colors.white,
-                            ),
+              child: Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("assets/scroll.png"),
+                      fit: BoxFit.cover),
+                ),
+                child: CustomScrollView(
+                  slivers: [
+                    const SliverAppBar(
+                      title: Text("The story thus far..."),
+                      backgroundColor: Colors.transparent,
+                      floating: true,
+                      pinned: true,
+                    ),
+                    Obx(
+                      () => SliverList.builder(
+                        itemCount: model.completedTasks.length,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                          child: Center(
+                            child: model.completedTasks[index].story == null
+                                ? const SpinKitPulse(color: Colors.white)
+                                : Text(
+                                    model.completedTasks[index].story!,
+                                    style:
+                                        textTheme(context).bodyLarge!.copyWith(
+                                              color: Colors.white,
+                                            ),
+                                  ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),

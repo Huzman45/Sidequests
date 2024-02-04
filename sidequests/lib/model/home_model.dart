@@ -10,7 +10,6 @@ class HomeModel {
 
   final RxList<TaskRecord> pendingTasks = <TaskRecord>[].obs;
   final RxList<TaskRecord> completedTasks = <TaskRecord>[].obs;
-  final RxList<String> storylines = <String>[].obs;
 
   int pageIndex = 1;
 

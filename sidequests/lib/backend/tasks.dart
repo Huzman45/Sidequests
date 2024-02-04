@@ -17,6 +17,9 @@ class TaskRecord extends Record {
 
   TaskType get difficulty => getAttr<TaskType>('difficulty')!;
   set difficulty(TaskType difficulty) => setAttr('difficulty', difficulty);
+
+  String? get story => getAttr('story');
+  set story(String? story) => data['story'] = story;
 }
 
 enum TaskType {

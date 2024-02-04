@@ -28,7 +28,7 @@ void initializeApp() async {
 
   db = await openDatabase(
     path,
-    version: 2,
+    version: 3,
     onCreate: (Database database, int version) async {
       await database.execute('''
 create table ${Tables.taskTable} ( 
@@ -38,9 +38,6 @@ create table ${Tables.taskTable} (
   completed int not null)
 ''');
     },
-    onUpgrade: (db, oldVersion, newVersion) async =>
-        await db.execute('''alter table ${Tables.taskTable}
-    add difficulty text not null;'''),
   );
 
   runApp(const MainApp());
