@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sidequests/backend/tables/tasks.dart';
 import 'package:sidequests/controller/home_controller.dart';
 import 'package:sidequests/theme.dart';
 
@@ -40,16 +39,37 @@ class HomeView extends GetView<HomeController> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(model.completedTasks.length.toString()),
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 50,
+                                width: 40,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage("assets/coin.png"),
+                                      fit: BoxFit.fill),
+                                ),
+                              ),
+                              Text(
+                                model.completedTasks.length.toString(),
+                                style: textTheme(context).labelLarge!.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      height: 1,
+                                    ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-              const TaskTile(),
-              const TaskTile(completed: true),
+              const TaskTiles(),
+              const SliverToBoxAdapter(child: SizedBox(height: 40)),
+              const TaskTiles(completed: true),
             ],
           ),
         ),
@@ -58,8 +78,8 @@ class HomeView extends GetView<HomeController> {
   }
 }
 
-class TaskTile extends GetView<HomeController> {
-  const TaskTile({
+class TaskTiles extends GetView<HomeController> {
+  const TaskTiles({
     this.completed = false,
     super.key,
   });
@@ -87,18 +107,40 @@ class TaskTile extends GetView<HomeController> {
                 fit: BoxFit.fill,
               ),
             ),
-            child: CheckboxListTile(
+            child: ListTile(
               title: RichText(
                 text: TextSpan(
                   text: taskList[index].description,
                   style: textTheme(context).bodyLarge!.copyWith(
                       color: Colors.white,
+                      decorationColor: const Color.fromARGB(255, 223, 223, 223),
+                      decorationThickness: 4,
+                      fontWeight: FontWeight.bold,
                       decoration:
                           completed ? TextDecoration.lineThrough : null),
                 ),
               ),
-              value: taskList[index].completed,
-              onChanged: (val) => controller.checkTask(taskList[index], val!),
+              trailing: ElevatedButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color(0x00000000),
+                    shadowColor: const Color(0x00000000),
+                    surfaceTintColor: const Color(0x00000000),
+                  ),
+                  onPressed: () => completed
+                      ? controller.uncheckTask(taskList[index])
+                      : controller.checkTask(taskList[index]),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    foregroundDecoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: completed
+                            ? const AssetImage("assets/check_checked.png")
+                            : const AssetImage("assets/check_unchecked.png"),
+                      ),
+                    ),
+                  )),
             ),
           ),
         ),

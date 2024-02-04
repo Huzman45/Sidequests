@@ -44,18 +44,22 @@ class HomeController extends GetxController {
     Get.back();
   }
 
-  void checkTask(TaskRecord task, bool value) async {
-    task.completed = value;
+  void checkTask(TaskRecord task) async {
+    task.completed = true;
     await db.update(Tables.taskTable, task.data,
         where: "id = ?", whereArgs: [task.id]);
 
-    if (value) {
-      model.completedTasks.add(task);
-      model.pendingTasks.remove(task);
-    } else {
-      model.pendingTasks.add(task);
-      model.completedTasks.remove(task);
-    }
+    model.completedTasks.add(task);
+    model.pendingTasks.remove(task);
+  }
+
+  void uncheckTask(TaskRecord task) async {
+    task.completed = false;
+    await db.update(Tables.taskTable, task.data,
+        where: "id = ?", whereArgs: [task.id]);
+
+    model.completedTasks.remove(task);
+    model.pendingTasks.add(task);
   }
 
   void deleteTask(TaskRecord task) async {
