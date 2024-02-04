@@ -28,3 +28,4 @@ flutter:
     - assets/coin.png
     - assets/check_checked.png
     - assets/check_unchecked.png
+    - assets/progress_overlay.png

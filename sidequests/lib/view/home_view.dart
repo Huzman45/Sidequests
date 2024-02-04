@@ -32,14 +32,32 @@ class HomeView extends GetView<HomeController> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: LinearProgressIndicator(
-                            minHeight: 40,
-                            value: model.completedTasks.length /
-                                (model.totalTasks == 0 ? 1 : model.totalTasks),
+                          child: Stack(
+                            alignment: const Alignment(0, 0.5),
+                            clipBehavior: Clip.none,
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(40, 0, 20, 0),
+                                child: LinearProgressIndicator(
+                                  minHeight: 40,
+                                  value: model.completedTasks.length /
+                                      (model.totalTasks == 0
+                                          ? 1
+                                          : model.totalTasks),
+                                ),
+                              ),
+                              Image.asset(
+                                "assets/progress_overlay.png",
+                                fit: BoxFit.fill,
+                                width: Get.width,
+                                height: 80,
+                              ),
+                            ],
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
                           child: Column(
                             children: [
                               Container(
@@ -68,7 +86,7 @@ class HomeView extends GetView<HomeController> {
                 ),
               ),
               const TaskTiles(),
-              const SliverToBoxAdapter(child: SizedBox(height: 40)),
+              const SliverToBoxAdapter(child: SizedBox(height: 100)),
               const TaskTiles(completed: true),
             ],
           ),
