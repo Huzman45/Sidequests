@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:sidequests/backend/tables/table.dart';
 import 'package:sidequests/controller/home_controller.dart';
+import 'package:sidequests/theme.dart';
 import 'package:sidequests/view/home_view.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -46,6 +47,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       initialRoute: '/home',
+      theme: lightMode,
       getPages: [
         GetPage(
           name: '/home',
