@@ -39,21 +39,29 @@ class HomeView extends GetView<HomeController> {
                       floating: true,
                       pinned: true,
                     ),
+                    const SliverToBoxAdapter(
+                      child: SizedBox(height: 20),
+                    ),
                     Obx(
                       () => SliverList.builder(
                         itemCount: model.completedTasks.length,
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-                          child: Center(
-                            child: model.completedTasks[index].story == null
-                                ? const SpinKitPulse(color: Colors.white)
-                                : Text(
-                                    model.completedTasks[index].story!,
-                                    style:
-                                        textTheme(context).bodyLarge!.copyWith(
-                                              color: Colors.white,
-                                            ),
-                                  ),
+                          child: Obx(
+                            () => Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 5),
+                              child: model.completedTasks[index].story == null
+                                  ? const SpinKitPulse(color: Colors.white)
+                                  : Text(
+                                      model.completedTasks[index].story!,
+                                      style: textTheme(context)
+                                          .bodyLarge!
+                                          .copyWith(
+                                            color: Colors.white,
+                                          ),
+                                    ),
+                            ),
                           ),
                         ),
                       ),

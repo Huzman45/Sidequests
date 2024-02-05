@@ -58,6 +58,7 @@ class HomeController extends GetxController {
     String prev = model.completedTasks.isEmpty
         ? "I, the adventurer, wake up in my bed"
         : model.completedTasks.last.story!;
+
     model.completedTasks.add(task);
     model.pendingTasks.remove(task);
     model.coins.value += model.getCoins(task.difficulty);
@@ -82,6 +83,9 @@ class HomeController extends GetxController {
   void deleteTask(TaskRecord task) async {
     await db.delete(Tables.taskTable, where: 'id = ?', whereArgs: [task.id]);
     model.totalCoins.value -= (model.getCoins(task.difficulty));
+    if (task.completed) {
+      model.coins.value -= model.getCoins(task.difficulty);
+    }
 
     if (task.completed) {
       model.completedTasks.remove(task);
